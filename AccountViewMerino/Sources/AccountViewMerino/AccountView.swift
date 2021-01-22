@@ -1,101 +1,109 @@
-//
-//  SwiftUIView.swift
-//  
-//
-//  Created by Diogo Ribeiro on 12/12/2020.
-//
-
 import SwiftUI
 
-
-class AccountViewModel {
-    
-}
-
 public struct AccountView: View {
+    @State private var hasTimeElapsed = false
     
     public init() {}
     
     public var body: some View {
-        AccountViewList()
-            .navigationBarTitle(Text("Account"))
-    }
-    
-    
-}
-
-
-public struct AccountViewList: View {
-    public init() {}
-    
-    public var body: some View {
-        List{
+        NavigationView {
             
-            Section(header: Header(), footer: Footer()) {
-                HStack {
-                    Image("phone",bundle: .module).frame(width: 24, height: 24)
-                    Text("Change link").font(.subheadline).foregroundColor(.gray)
+            List {
+                
+                Section(header: HStack {
+                    HeaderView(title: "Account")
+                    Spacer()
+                }.background(Color.white).listRowInsets(EdgeInsets(top: 0, leading: 0, bottom: 0, trailing: 0))
+                ) {
+                    ItemView(item: ItemViewModel(title: "Diogo Ribeiro", subTitle: "diogjp10@gmail.com", imageName: "avatar", arrowImage: "pencil"))
+                    ItemView(item: ItemViewModel(title: "https//bit.ly/ADFGDGF", subTitle: "", imageName: "ic_browser", arrowImage: "link"), isLink: true)
                 }
-            }
-        }.padding()
-        
+                
+                Section(header: HStack {
+                    HeaderView(title: "Actions")
+                    Spacer()
+                }.background(Color.white).listRowInsets(EdgeInsets(top: -10, leading: 0, bottom: 0, trailing: 0))
+                ) {
+                    ItemView(item: ItemViewModel(title: "Booking", subTitle: "", imageName: "avatar", arrowImage: "calendar.badge.plus"))
+                    ItemView(item: ItemViewModel(title: "Client", subTitle: "", imageName: "avatar", arrowImage: "person.crop.circle.badge.plus"))
+                }
+                
+                
+                Section(header: HStack {
+                    HeaderView(title: "Others")
+                    Spacer()
+                }.background(Color.white).listRowInsets(EdgeInsets(top: -10, leading: 0, bottom: 0, trailing: 0))
+                ) {
+                    ItemView(item: ItemViewModel(title: "Categories", subTitle: "0 categories", imageName: "avatar"))
+                    ItemView(item: ItemViewModel(title: "Services", subTitle: "0 actives, 0 inactive", imageName: "avatar"))
+                }
+                
+                
+            }.listStyle(GroupedListStyle())
+            .navigationBarHidden(true)
+        }
     }
 }
 
+struct HeaderView: View {
+    var title: String
+    var body: some View {
+        if #available(iOS 14.0, *) {
+            Text(title).textCase(nil).font(.headline).foregroundColor(.black).padding()
+        } else {
+            // Fallback on earlier versions
+            Text(title).font(.headline).foregroundColor(.black).padding()
+        }
+    }
+}
 
-public struct Header: View {
-    public init() {}
+struct ItemViewModel:Identifiable {
+    var id = UUID()
+    var title:String
+    var subTitle:String
+    var imageName:String
+    var arrowImage:String?
+}
+
+struct ItemView: View {
     
-    public var body: some View {
+    var item: ItemViewModel
+    var isLink:Bool = false
+    
+    var body: some View {
         
-        VStack(alignment: .leading){
-            
+        ZStack {
             HStack {
-                Image("avatar_1",bundle: .module)
-                    .frame(width: 50, height: 50)
-                
-                VStack (alignment: .leading){
-                    Text("Diogo Ribeiro").font(.headline).bold()
-                    Text("diogjp10@gmail.com").font(.subheadline).foregroundColor(.black)
-                }.padding(.leading, 10)
-                
+                Image(item.imageName)
+                VStack(alignment: .leading) {
+                    
+                    if isLink {
+                        Text(item.title).underline().font(.headline)
+                    } else {
+                        Text(item.title).font(.headline)
+                    }
+                    
+                    
+                    if !item.subTitle.isEmpty {
+                        Text(item.subTitle).font(.subheadline).foregroundColor(.gray)
+                    }
+                    
+                }
                 Spacer()
                 
-            }.padding(20)
-            
-            HStack {
-                Image("phone",bundle: .module).frame(width: 24, height: 24)
-                Text("+ 351 926 426 508").font(.subheadline).foregroundColor(.black)
+                if item.arrowImage != nil {
+                    Image(systemName: item.arrowImage!).frame(width: 24, height: 24)
+                }
                 
-            }.padding(.leading,20)
+            }.padding(EdgeInsets(top: 0, leading: 0, bottom: 10, trailing: 16))
             
-            HStack {
-                Image("link",bundle: .module) .frame(width: 24, height: 24)
-                Text("link").font(.subheadline).foregroundColor(.black)
-                
-            }.padding(EdgeInsets(top: 2, leading: 20, bottom: 10, trailing: 0))
-            
-        }
-        
-        .background(Color.blue).foregroundColor(Color.black).listRowInsets(EdgeInsets(top: 0, leading: 0, bottom: 0, trailing: 0)).cornerRadius(5)
-    }
-}
-
-public struct Footer: View {
-    public init() {}
-    
-    public var body: some View {
-        
-        Button(action: {
-            // What to perform
-            print("sair")
-        }) {
-            GeometryReader { geometry in
-                VStack(alignment: .center) {
-                    Text("Logout").foregroundColor(Color.red)
-                }.frame(width: geometry.size.width)
+            //hack to hide >
+            NavigationLink(destination: Text("item.name")) {
+                EmptyView()
             }
+            .opacity(0)
+            .buttonStyle(PlainButtonStyle())
         }
-    
     }
+    
 }
