@@ -21,12 +21,14 @@ public struct MerinoAccountViewModel: Identifiable {
     var subTitle:String
     var imageName:String
     var systemImage:String
+    var view: AnyView
     
-    public init(title:String, subTitle:String, imageName: String, arrowImage: String){
+    public init(title:String, subTitle:String, imageName: String, arrowImage: String, view: AnyView){
         self.title = title
         self.subTitle = subTitle
         self.imageName = imageName
         self.systemImage = arrowImage
+        self.view = view
     }
 }
 
@@ -104,7 +106,7 @@ struct ItemView: View {
             }.padding(EdgeInsets(top: 0, leading: 0, bottom: 10, trailing: 16))
             
             //hack to hide >
-            NavigationLink(destination: Text("item.name")) {
+            NavigationLink(destination: item.view) {
                 EmptyView()
             }
             .opacity(0)
