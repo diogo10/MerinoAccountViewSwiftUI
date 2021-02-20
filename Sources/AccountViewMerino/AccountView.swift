@@ -1,8 +1,5 @@
 import SwiftUI
 
-public protocol MerinoAccountViewDelegate {
-    func accountClickItem(index: Int)
-}
 
 public struct MerinoAccountViewModelSection: Identifiable {
     public var id = UUID()
@@ -34,12 +31,9 @@ public struct MerinoAccountViewModel: Identifiable {
 
 public struct MerinoAccountView: View {
     @State private var hasTimeElapsed = false
-    
-    var delegate: MerinoAccountViewDelegate
     var items: [MerinoAccountViewModelSection]
     
-    public init(delegate: MerinoAccountViewDelegate, items: [MerinoAccountViewModelSection]) {
-        self.delegate = delegate
+    public init(items: [MerinoAccountViewModelSection]) {
         self.items = items
     }
     
@@ -59,7 +53,7 @@ public struct MerinoAccountView: View {
             }
             
             
-        }.listStyle(GroupedListStyle()).navigationBarHidden(true)
+        }.listStyle(GroupedListStyle()).navigationBarHidden(false)
     }
 }
 
