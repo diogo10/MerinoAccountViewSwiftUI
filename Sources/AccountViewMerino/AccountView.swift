@@ -98,14 +98,14 @@ struct ItemView: View {
                 Image(systemName: item.systemImage).frame(width: 24, height: 24)
                 
             }.padding(EdgeInsets(top: 0, leading: 0, bottom: 10, trailing: 16))
-            .opacity(0)
-            .buttonStyle(PlainButtonStyle())
+            
             
             //hack to hide >
             if let theView = item.view {
                 NavigationLink(destination: theView) {
                     EmptyView()
-                }
+                }.opacity(0)
+                .buttonStyle(PlainButtonStyle())
             }
             
             
