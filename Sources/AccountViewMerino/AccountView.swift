@@ -18,9 +18,9 @@ public struct MerinoAccountViewModel: Identifiable {
     var subTitle:String
     var imageName:String
     var systemImage:String
-    var view: AnyView
+    var view: AnyView?
     
-    public init(title:String, subTitle:String, imageName: String, arrowImage: String, view: AnyView){
+    public init(title:String, subTitle:String, imageName: String, arrowImage: String, view: AnyView?){
         self.title = title
         self.subTitle = subTitle
         self.imageName = imageName
@@ -98,13 +98,17 @@ struct ItemView: View {
                 Image(systemName: item.systemImage).frame(width: 24, height: 24)
                 
             }.padding(EdgeInsets(top: 0, leading: 0, bottom: 10, trailing: 16))
-            
-            //hack to hide >
-            NavigationLink(destination: item.view) {
-                EmptyView()
-            }
             .opacity(0)
             .buttonStyle(PlainButtonStyle())
+            
+            //hack to hide >
+            if let theView = item.view {
+                NavigationLink(destination: theView) {
+                    EmptyView()
+                }
+            }
+            
+            
         }
     }
     
